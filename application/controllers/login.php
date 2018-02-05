@@ -222,6 +222,8 @@ class Login extends CI_Controller
                                 ELSE {
                                     echo "<script>alert('Acceso Restingido.');</script>";
                                     echo "<script>window.location.href='".base_url()."do/gestion';</script>";
+                                    $this->guardarLog($colaborador->idcolaborador);             
+                                    die;
                                 }
                             }
                             $this->session->set_userdata($data);
