@@ -106,7 +106,7 @@ class Parametros_model extends CI_Model
         $return =  $db->select('c.idcolaborador id,c.idcolaborador,c.nombre,c.apellidoPaterno,c.apellidoMaterno,c.idunidad')
                         ->from('colaboradores c')
                         ->where('c.estado','A')
-                        ->order_by('c.idcolaborador','asc')
+                        ->order_by('c.apellidoPaterno','asc')
                         ->get()
                         ->result();
          $this->load->database('default',true);

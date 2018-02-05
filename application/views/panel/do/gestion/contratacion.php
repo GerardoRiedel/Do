@@ -121,7 +121,8 @@ box-shadow: -2px 2px 41px 2px rgba(0,0,0,0.75);z-index: 25; background-color: #e
                         <select name="costo" id="costo">
                             <option value="0">Seleccione...</option>
                             <?php foreach($costo as $cos): ?>
-                                <option value="<?php echo $cos->id;?>" <?php IF(!empty($contratacion->conCosto) && $contratacion->conCosto === $cos->id)echo 'selected'; ?> ><?php echo $cos->descripcion;?></option>
+                            <?php $nombreCentro = str_replace('Ã³', ó, $cos->descripcion); $nombreCentro = str_replace('Ã­', í, $nombreCentro); $nombreCentro = str_replace('Ã±', ñ, $nombreCentro); ?>
+                                <option value="<?php echo $cos->id;?>" <?php IF(!empty($contratacion->conCosto) && $contratacion->conCosto === $cos->id)echo 'selected'; ?> ><?php echo $nombreCentro;?></option>
                             <?php endforeach; ?>
                         </select> 
                     </div> 
