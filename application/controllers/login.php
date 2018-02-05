@@ -128,11 +128,13 @@ class Login extends CI_Controller
                                 }
                                 ELSE {
                                     echo "<script>alert('Acceso Restingido.');</script>";
-                                    echo "<script>window.location.href='".base_url()."do/gestion';</script>";
+                                    echo "<script>window.location.href='".base_url()."';</script>";
+                                    $this->guardarLog($id);             
+                                    die;
                                 }
                             }
                             $this->session->set_userdata($data);
-                            $this->guardarLog();             
+                            $this->guardarLog($id);             
                             $this->index();
                 }ELSE{
                     die('visita');
@@ -164,12 +166,13 @@ class Login extends CI_Controller
                 // echo    '<script>window.close();</script>';
                 //header('location: http://www.cetep.cl/intracetep');
         }
-        public function guardarLog(){
+        public function guardarLog($id=''){
              //Guarda Log
+            IF(!empty($id)){$this->usuarios_panel_log_model->uplUsuario = $id;$this->usuarios_panel_log_model->uplDescripcion = "Acceso restringido";}
+            ELSE {$this->usuarios_panel_log_model->uplUsuario = $this->session->userdata('id_usuario');$this->usuarios_panel_log_model->uplDescripcion = "Acceso a panel de control";}
+            
                 $this->usuarios_panel_log_model->uplFecha = date('Y-m-d H:i:s');
                 $this->usuarios_panel_log_model->uplPerfil = $this->session->userdata('perfil');
-                $this->usuarios_panel_log_model->uplUsuario = $this->session->userdata('id_usuario');
-                $this->usuarios_panel_log_model->uplDescripcion = "Acceso a panel de control";
                 $this->usuarios_panel_log_model->guardarLog();
         }
         
