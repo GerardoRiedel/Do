@@ -35,9 +35,13 @@ class Layout_Helper
 
    static function cargaVista(&$obj,$view,$data,$restriccion = null)
     {
-       //die(var_dump($obj->session->userdata('perfil')));
-		
-        if($obj->session->userdata('perfil') == '1'){
+       //die(var_dump($obj->session->userdata('acceso_ok')));
+	
+       if($obj->session->userdata('acceso_ok') !== 'OK' ){
+            $obj->session->sess_destroy();
+            header('location: http://www.cetep.cl/do');
+        }  
+        elseif($obj->session->userdata('perfil') == '1'){
         	 //die('111111111111111111111111');
                 $no_vistas_perfil1 = array("ingresos");
                 if (in_array($restriccion, $no_vistas_perfil1)) {
@@ -51,12 +55,12 @@ class Layout_Helper
                 }
         }elseif($obj->session->userdata('perfil') == '2'){ 
         	//die('22222222222222222222222222');
-                $no_vistas_perfil1 = array("visita");
+                $no_vistas_perfil1 = array("ingresos");
                 if (in_array($restriccion, $no_vistas_perfil1)) {
                         $obj->load->view('panel/layout/head', $data);
                         //$obj->load->view('panel/layout/user_nav',$data);
                         //$obj->load->view('panel/layout/left');
-                        $obj->load->view('panel/do/sugerencia/'.$view,$data);
+                        $obj->load->view('panel/do/gestion/'.$view,$data);
                         $obj->load->view('panel/layout/footer');
                 }else{
                         Layout_Helper::restringido($obj,$data);

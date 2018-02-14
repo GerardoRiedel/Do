@@ -13,7 +13,7 @@ class Login extends CI_Controller
     }
 	
         public function index()
-        { 
+        { //$this->session->sess_destroy();
             //$this->session->sess_destroy();die('aca');
             //$data = array('is_logged_in'     =>  FALSE);
             //$this->session->set_userdata($data);	
@@ -39,10 +39,14 @@ class Login extends CI_Controller
                     //$this->usuarios_panel_log_model->uplDescripcion = "Acceso a panel de control";
                     //$this->usuarios_panel_log_model->guardarLog();
 
-                    if($this->session->userdata('perfil') >= '1'){ 
+                    if($this->session->userdata('perfil') === '1'){ 
                         IF($nav != 'Chrome'){
                         echo "<script>".$alert."window.location.href='".base_url()."do/gestion';</script>";}
                         ELSE {redirect(base_url().'do/gestion');}
+                    }elseif($this->session->userdata('perfil') > '1'){ 
+                        IF($nav != 'Chrome'){
+                        echo "<script>".$alert."window.location.href='".base_url()."do/gestion';</script>";}
+                        ELSE {redirect(base_url().'do/gestion/listarContratacion');}
                     }
              //     elseif($this->session->userdata('perfil') == '2'){ //die(var_dump($this->session->userdata));
              //     $this->session->sess_destroy();
@@ -64,9 +68,11 @@ class Login extends CI_Controller
                         echo "<script>alert('Usuario o password mal ingresados.');</script>";
                     }
 
-                }elseif(!empty($_GET['var'])){
+                }elseif(!empty($_GET['var']) && !empty($_GET['token']) && !empty($_GET['formulario']) ){
+                    $this->validar($_GET['var'],$_GET['token'],$_GET['formulario']);
+                }elseif(!empty($_GET['var']) ){
                     $this->nuevo($_GET['var']);
-                }else{//die('ultimo');
+                }else{//die('ultimo'.$_GET['var']);
                     $this->session->sess_destroy();
                     $this->login();
                     //echo "<script>alert('Usuario no registrado');</script>";
@@ -98,7 +104,7 @@ class Login extends CI_Controller
                 //die(var_dump($colaborador));
                 IF(!empty($colaborador->idunidad)){
                             
-                            IF($colaborador->idunidad==='1'){//die('finanzas');
+                            IF($colaborador->idunidad==='1' || $colaborador->idunidad==='22' || $colaborador->idcolaborador==='285'){//die('finanzas');
                                 //FINANZAS
                                 $data = array(
                                                     'acceso_ok'     =>  'OK',
@@ -129,12 +135,12 @@ class Login extends CI_Controller
                                 ELSE {
                                     echo "<script>alert('Acceso Restingido.');</script>";
                                     echo "<script>window.location.href='".base_url()."';</script>";
-                                    $this->guardarLog($id);             
+                                    $this->guardarLog($colaborador->idcolaborador);             
                                     die;
                                 }
                             }
                             $this->session->set_userdata($data);
-                            $this->guardarLog($id);             
+                            $this->guardarLog();             
                             $this->index();
                 }ELSE{
                     die('visita');
@@ -166,6 +172,11 @@ class Login extends CI_Controller
                 // echo    '<script>window.close();</script>';
                 //header('location: http://www.cetep.cl/intracetep');
         }
+        public function salirSinGuardar()
+    {
+            $this->session->sess_destroy();
+            redirect(base_url());
+    }
         public function guardarLog($id=''){
              //Guarda Log
             IF(!empty($id)){$this->usuarios_panel_log_model->uplUsuario = $id;$this->usuarios_panel_log_model->uplDescripcion = "Acceso restringido";}
@@ -191,7 +202,7 @@ class Login extends CI_Controller
                     $colaborador = $this->login_model->loginUsuario($username,$passwordSin);
                     IF(!empty($colaborador->idunidad)){
                             
-                            IF($colaborador->idunidad==='1'){
+                            IF($colaborador->idunidad==='1' || $colaborador->idunidad==='22' || $colaborador->idcolaborador==='285'){
                                 //FINANZAS
                                 $data = array(
                                                     'acceso_ok'     =>  'OK',
@@ -239,6 +250,30 @@ class Login extends CI_Controller
         
         
         
+        public function validar($id,$token,$formulario)
+        {
+                $tockenCheck=$this->token();
+                IF($token == $tockenCheck){
+               
+                                //FINANZAS
+                                $data = array(
+                                                    'acceso_ok'     =>  'OK',
+                                                    'id_usuario'         =>  $id,
+                                                    'perfil'                    =>  '2',
+                                                    'reloj'                     =>  date('Y-m-d H:i:s',strtotime ( '+60 minutes' )),
+                                                    );	
+                                $this->session->set_userdata($data);
+                                $this->guardarLog();    
+                                redirect(base_url().'do/gestion/cargarContratacion/'.$formulario);
+                }        
+                echo "<script>alert('Token Invalido.');</script>";
+                echo "<script>window.location.href='".base_url()."';</script>";
+                
+            
+        }
+        
+        
+        
         
         
         
@@ -255,8 +290,7 @@ class Login extends CI_Controller
 	
 	public function token()
 	{
-		$token = md5(uniqid(rand(),true));
-		$this->session->set_userdata('token',$token);
+                                      $token = md5(date('Y-m-d'));
 		return $token;
 	}
 	

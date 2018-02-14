@@ -29,6 +29,7 @@ class gestion extends CI_Controller {
     }
     public function listarContratacion()
     {
+        IF($this->session->userdata('perfil') === '2'){$this->session->sess_destroy();}
         $usuario = '';
         $perfil = $this->session->userdata('perfil');
         IF($perfil === '1'){
@@ -133,6 +134,7 @@ class gestion extends CI_Controller {
         $observacion   = $this->input->post('observacion');
         $matOtro   = $this->input->post('matOtro');
         $uniOtro   = $this->input->post('uniOtro');
+        $horas   = $this->input->post('horas');
         $fechaIngresodate   = $this->input->post('fechaIngreso');
         IF(!empty($fechaIngresodate)){
             $fechaIng       = new DateTime($fechaIngresodate);
@@ -146,13 +148,16 @@ class gestion extends CI_Controller {
         $documentacion   = $this->parametros_model->dameDocumentacion();
         $seguridad   = $this->parametros_model->dameSeguridad();
         $estado = $this->input->post('conEstado');
-            IF($estado==='0'){$estado=$estado+1;}
+            IF(($this->session->userdata('perfil') === '3' || $this->session->userdata('perfil') === '2') && $estado<'2') {$estado = 2;}
+            ELSEIF($estado==='0'){$estado=$estado+1;}
             ELSEIF($estado==='1'){$estado=$estado+1;}
+            ELSEIF($estado==='2'){$estado=$estado+1;}
         
-        IF($motivo === '5' ||$motivo === '6' ||$motivo === '7'){
+        IF($motivo === '5' ||$motivo === '6' ||$motivo === '7' || $motivo === '8'){
             $this->contratacion_model->conPeriodo= $periodo;
-            $this->contratacion_model->conColaborador= $colaborador;
+            
         }
+        $this->contratacion_model->conColaborador= $colaborador;
         $this->contratacion_model->conCargo= $cargo;
         $this->contratacion_model->conCargoOtro= $otroCargo;
         $this->contratacion_model->conVacante= $vacante;
@@ -165,6 +170,7 @@ class gestion extends CI_Controller {
         $this->contratacion_model->conCritico= $critico;
         $this->contratacion_model->conProceso= $proceso;
         $this->contratacion_model->conFechaIngRequerida= $fecha;
+        $this->contratacion_model->conHoras= $horas;
         $this->contratacion_model->conJornada= $jornada;
         $this->contratacion_model->conModalidad= $modalidad;
         $this->contratacion_model->conObservacion= $observacion;
@@ -174,6 +180,7 @@ class gestion extends CI_Controller {
         $this->contratacion_model->conSeleccionado= $seleccionado;
         $this->contratacion_model->conSueldo= $sueldo;
         $this->contratacion_model->guardar();
+        $operaciones = $dti = '';
         
         IF(empty($conId)){$contratacion = $this->contratacion_model->dameUltimo(); $conId = $contratacion->conId; }
         $this->material_model->limpiar($conId);
@@ -185,6 +192,14 @@ class gestion extends CI_Controller {
             IF($estado === 'on')$estado = 1; ELSE $estado = 0; 
             $this->material_model->matConEstado = $estado;
             $this->material_model->guardarMaterial();
+                IF($estado===1){
+                    IF($mat->matId==='1'){$operaciones = ' - Lugar/Puesto de trabajo (requiere nuevo).<br>'; 
+                    }ELSE IF($mat->matId==='2'){$operaciones .= ' - Silla - Escritorio (requiere nuevo),<br>'; 
+                    }ELSE IF($mat->matId==='4'){$dti = ' - Asignación PC/Notebook (requiere nuevo),<br>'; 
+                    }ELSE IF($mat->matId==='5'){$dti .= ' - Requiere Teclado/Mouse(requiere nuevo),<br>'; 
+                    }
+                }
+            
         }
         unset($this->material_model->matConContratacion,$this->material_model->matConMaterial,$this->material_model->matConEstado);   
          FOREACH($documentacion as $doc){
@@ -195,7 +210,6 @@ class gestion extends CI_Controller {
             IF($estado === 'on')$estado = 1; ELSE $estado = 0; 
             $this->material_model->docConEstado = $estado;
             $this->material_model->guardarDocumentacion();
-            
         }
         unset($this->material_model->docConContratacion,$this->material_model->docConDocumentacion,$this->material_model->docConEstado);  
         FOREACH($seguridad as $seg){
@@ -218,36 +232,69 @@ class gestion extends CI_Controller {
             $this->material_model->uniConEstado = $estado;
             $this->material_model->guardarUniforme();
         }
-        
-        
-    //  $data['contratacion']   = $this->contratacion_model->dameTodos();
-    //  $data['unidad'] = $this->parametros_model->dameUnidades();
-    //  $data['menu']       = "formularios";
-    //  $data['submenu']    = "listacontratacion";
-    //  $data['title']           = 'Lista de Formularios de Contratación';
-        $this->enviarCorreo($conId);
+
+        IF($estado<='2'){$this->enviarCorreo($conId,$operaciones,$dti); }
+        IF($this->session->userdata('perfil') === '2'){$this->session->sess_destroy();}
         $this->listarContratacion();
-        //Layout_Helper::cargaVista($this,'listarContratacion',$data,'ingresos');  
     }
     
-    public function enviarCorreo($conId)
+    public function enviarCorreo($conId,$operaciones='',$dti='')
     {
         $envio = $this->contratacion_model->dameUno($conId);
         
         IF($envio->conEstado==='1'){
+            $token=$token = md5(date('Y-m-d'));
             $destinatario = 'marcelapaz@cetep.cl'; 
-            $destinatario = 'mramirez@cetep.cl,amartinez@cetep.cl'; 
-            $mensaje = 'Estimado departamento de Finanzas,<br><br>La Jefatura a enviado la solicitud de contratación N°'.$envio->conId.'.<br>Para validarlo favor ingresar a la plataforma a traves de su intracetep<br><br>Atentamente<br><br>Cetep';
+            //$destinatario = 'gerardo.riedel.c@gmail.com';
+            $mensaje = 'Estimado departamento de Finanzas,<br><br>La Jefatura a enviado la solicitud de contratación N°'.$envio->conId.'.<br>Token valido por 24hrs: <a href="www.cetep.cl/do/?var=43&token='.$token.'&formulario='.$envio->conId.'">Validar</a><br>Para validarlo posteriormente favor ingresar a la plataforma a través de su Intracetep.<br><br>Atentamente<br><br><img style="width: 20%;"src="'.base_url().'../assets/img/logo_vertical_cetep.png"><br>Cetep';
         }
         ELSEIF($envio->conEstado==='2'){
             $destinatario = 'mramirez@cetep.cl,amartinez@cetep.cl'; 
-            $mensaje = 'Estimados departamentos,<br><br>El departamento de finanzas a validado la solicitud de contratación N°'.$envio->conId.'.<br>Para revisar favor ingresar a la plataforma a traves de su intracetep<br><br>Atentamente<br><br>Cetep';
+            //$destinatario = 'gerardo.riedel.c@gmail.com';
+            $mensaje = 'Estimados departamentos de RRHH y DO,<br><br>El departamento de finanzas a validado la solicitud de contratación N°'.$envio->conId.'.<br>Para revisar favor ingresar a la plataforma a través de su Intracetep<br><br>Atentamente<br><br><img style="width: 20%;"src="'.base_url().'../assets/img/logo_vertical_cetep.png"><br>Cetep';
+            IF(!empty($operaciones)||!empty($dti)){$this->enviarCorreoDTI($conId,$operaciones,$dti); }
         }
         IF(!empty($destinatario)){
             $asunto = 'Formulario de Contratación';
             $headers = "MIME-Version: 1.0\r\n"; 
             $headers .= "Content-type: text/html; charset=utf-8\r\n"; 
             $headers .= "From: Cetep <cetep@cetep.cl>\r\n"; //dirección del remitente 
+            $headers .= "bcc: griedel@cetep.cl";
+            mail($destinatario,$asunto,$mensaje,$headers) ;
+        }
+    }
+    public function enviarCorreoDTI($conId,$operaciones='',$dti='')
+    {
+        $envio = $this->contratacion_model->dameUno($conId);
+        ////////ENVIAR A OPERACIONES
+        IF(!empty($operaciones)){
+            $destinatario = 'operaciones@cetep.cl'; 
+            //$destinatario = 'gerardo.riedel.c@gmail.com';
+            $mensaje = 'Estimado departamento de Operaciones,<br><br>El area de Finanzas a validado la solicitud de contratación N°'.$envio->conId.'.<br>Para lo cual requerirá materiales de apoyo:<br><br>'.$operaciones.'<br><br>Atentamente<br><br>    <img style="width: 20%;"src="'.base_url().'../assets/img/logo_vertical_cetep.png">               <br>Cetep';
+        }
+        IF(!empty($destinatario)){
+            $asunto = 'Formulario de Contratación';
+            $headers = "MIME-Version: 1.0\r\n"; 
+            $headers .= "Content-type: text/html; charset=utf-8\r\n"; 
+            $headers .= "From: Cetep <cetep@cetep.cl>\r\n"; //dirección del remitente 
+     //       $headers .= "cc: mramirez@cetep.cl,amartinez@cetep.cl\r\n";
+            $headers .= "bcc: griedel@cetep.cl";
+            mail($destinatario,$asunto,$mensaje,$headers) ;
+        }
+        
+        
+        /////ENVIAR A DTI
+        IF(!empty($dti)){
+            $destinatario = 'dti@cetep.cl'; 
+            //$destinatario = 'gerardo.riedel.c@gmail.com';
+            $mensaje = 'Estimado departamento DTI,<br><br>El area de Finanzas a validado la solicitud de contratación N°'.$envio->conId.'.<br>La cual requiere materiales de apoyo:<br><br>'.$dti.'<br><br>Atentamente<br><br><img style="width: 20%;"src="'.base_url().'../assets/img/logo_vertical_cetep.png"><br>Cetep';
+        }
+        IF(!empty($destinatario)){
+            $asunto = 'Formulario de Contratación';
+            $headers = "MIME-Version: 1.0\r\n"; 
+            $headers .= "Content-type: text/html; charset=utf-8\r\n"; 
+            $headers .= "From: Cetep <cetep@cetep.cl>\r\n"; //dirección del remitente 
+     //       $headers .= "cc: mramirez@cetep.cl,amartinez@cetep.cl\r\n";
             $headers .= "bcc: griedel@cetep.cl";
             mail($destinatario,$asunto,$mensaje,$headers) ;
         }

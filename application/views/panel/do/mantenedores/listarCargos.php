@@ -36,7 +36,7 @@ box-shadow: -2px 2px 41px 2px rgba(0,0,0,0.75);z-index: 25 ">
                                 <td><?php echo $item->carId; ?></td>
                                 <td><?php echo $item->carNombre; ?></td>
                                 <td align="center">
-                                    <a class="tip-bottom" title="Modificar Cargo" href="<?php echo base_url("do/mantenedores/cargarCargo/".$item->carId )?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                    <a class="tip-bottom" title="Modificar Cargo" href="<?php echo base_url("do/mantenedores/cargarCargo/".$item->carId )?>"><i class="fas fa-edit" aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                                 <?php endforeach; ?>

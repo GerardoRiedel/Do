@@ -27,17 +27,7 @@ IF(empty($submenu)){$submenu='';}//die($this->session->userdata('id_usuario') );
              
              
         <?php }ELSEIF($this->session->userdata('perfil') == '2'){ ?>
-            <!--VISITA-->
-            <li class="submenu <?php if($menu === 'gestion' )echo "active open" ?>">
-                    <a href=""><i class="fab fa-wpforms" aria-hidden="true" style=" width: 20px;text-align: center"></i> <span>Contacto</span> <i class="arrow fa fa-chevron-right"></i></a>
-                    <ul>
-                        <li <?php if($submenu === 'contratacion')  echo "class='active'" ?>><a href="<?php echo base_url("do/gestion/contratacion"); ?>">Nueva Contratación</a></li>            
-                        <li <?php if($submenu === 'listacontratacion')  echo "class='active'" ?>><a href="<?php echo base_url("do/gestion/listarContratacion"); ?>">Lista de Formularios</a></li>            
-                    </ul> 
-            </li>
-            <li>
-                    <a href="<?php echo base_url();?>login/salir"><i class="fas fa-sign-out-alt" aria-hidden="true" style=" width: 20px;text-align: center"></i> <span>Salir</span></a>
-            </li>
+            
             
             
             

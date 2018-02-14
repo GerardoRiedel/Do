@@ -29,7 +29,6 @@ box-shadow: -2px 2px 41px 2px rgba(0,0,0,0.75);z-index: 25; background-color: #e
                             <tr>
                                 <th>Id</th>
                                 <th>Fecha Registro</th>
-                                <th>Fecha Ingreso Requerida</th>
                                 <th>Empresa</th>
                                 <th>Unidad</th>
                                 <th>Cargo</th>
@@ -59,15 +58,15 @@ box-shadow: -2px 2px 41px 2px rgba(0,0,0,0.75);z-index: 25; background-color: #e
                                     ELSE $color = 'grey'; 
                                     $color = '#6a6968';
                                     
-                                    IF($item->conEmpresa==='1')$empresa = 'Cetep';
-                                    ELSEIF($item->conEmpresa==='2')$empresa = 'MirAndes';
+                                    IF($item->conEmpresa==='2')$empresa = 'MirAndes';
+                                    ELSEIF($item->conEmpresa==='3')$empresa = 'Otec';
+                                    ELSE $empresa = 'Cetep';
                                     
                                     $estadoNombre = $item->estNombre;
                                 ?>
                             <tr>
                                 <td style="color:<?php echo $color; ?>;font-size:12px"><?php echo $item->conId; ?></td>
                                 <td style="color:<?php echo $color; ?>;font-size:12px"><?php $date = new DateTime($item->conFechaRegistro);echo $date->format('d-m-Y');//echo $item->id; ?></td>
-                                <td style="color:<?php echo $color; ?>;font-size:12px"><?php $date = new DateTime($item->conFechaIngRequerida);echo $date->format('d-m-Y');//echo $item->id; ?></td>
                                 <td style="color:<?php echo $color; ?>;font-size:12px"><?php echo $empresa; ?></td>
                                 <td style="color:<?php echo $color; ?>;font-size:12px"><?php echo $area; ?></td>
                                 <td style="color:<?php echo $color; ?>;font-size:12px"><?php echo $item->carNombre; IF($item->conCargo==='1000')echo $item->conCargoOtro; ?></td>
