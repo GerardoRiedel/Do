@@ -29,13 +29,13 @@ class Cron extends CI_Controller
                 $resumen = '';
                 $conId=$res->conId;
                 $envio = $this->contratacion_model->dameUno($conId);
-                $destinatario = 'marcelapaz@cetep.cl';
+                $destinatario = 'marcelapaz@cetep.cl,fhernandez@cetep.cl';
                 //$destinatario = 'gerardo.riedel.c@gmail.com';
                 $token=$token = md5(date('Y-m-d'));
                 $asunto = 'Recordatorio de Formularios de Contratación';
                 $resumen = 'Estimado departamento de Finanzas,<br><br>'
                         . 'Con respecto a la solicitud de contratación  N°'.$res->conId.', se le recuerda que han pasado '.$dias.' días habiles sin validar o rechazar el formulario de contratación enviado por su colaborador.<br>'
-                        . 'Token valido por 24hrs: <a href="www.cetep.cl/do/?var=43&token='.$token.'&formulario='.$res->conId.'">Validar</a><br><br>'
+                        . 'Token valido por 24hrs: <a href="www.cetep.cl/do/index.php/?var=43&token='.$token.'&formulario='.$res->conId.'">Validar</a><br><br>'
                         . 'Para validarlo o rechazarlo posteriormente favor ingresar a la plataforma a traves de su <b>intracetep</b> y dentro del listado de formularios <b>gestionar</b><br>'
                         .'<br><br>'
                         .'Atentamente,<br><br>';

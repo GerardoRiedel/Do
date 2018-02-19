@@ -251,7 +251,7 @@ class gestion extends CI_Controller {
         ELSEIF($envio->conEstado==='2'){
             $destinatario = 'mramirez@cetep.cl,amartinez@cetep.cl'; 
             //$destinatario = 'gerardo.riedel.c@gmail.com';
-            $mensaje = 'Estimados departamentos de RRHH y DO,<br><br>El departamento de finanzas a validado la solicitud de contratación N°'.$envio->conId.'.<br>Para revisar favor ingresar a la plataforma a través de su Intracetep<br><br>Atentamente<br><br><img style="width: 20%;"src="'.base_url().'../assets/img/logo_vertical_cetep.png"><br>Cetep';
+            $mensaje = 'Estimados departamentos de RRHH y DO,<br><br>El departamento de finanzas a validado la solicitud de contratación N°'.$envio->conId.'.<br>Para revisar favor ingresar a la plataforma a través de su Intracetep<br><br>Atentamente<br><br><img style="width: 20%;" src="'.base_url().'../assets/img/logo_vertical_cetep.png"><br>Cetep';
             IF(!empty($operaciones)||!empty($dti)){$this->enviarCorreoDTI($conId,$operaciones,$dti); }
         }
         IF(!empty($destinatario)){
