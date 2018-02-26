@@ -1,4 +1,8 @@
+<style>
+    @page {size: Letter;margin: 25px;}
+</style>
 <script type="text/javascript">
+    
     window.document.write('<style>'+
                 '.cabeceraVerde{font-size: 100%;font-family: Arial; color:green !important } '+
                 '.cabeceraAzul{font-size: 100%;font-family: Arial; color:blue !important } '+
@@ -54,13 +58,13 @@ window.print();window.close();window.history.go(-1);
             }
                                    
 $resumen="
-    <div align='center' style='vertical-align: top;height:1200px'>
+    <div align='center' style='vertical-align: top;height:1200px'><br><br>
         <table style='border-style: double;border-bottom: none;width:700px;'>
             <tr>
                 <td rowspan='2' style='width:500px'><br>";
-IF($empresa === 'MirAndes'){$resumen.="<img style='width: 20%; ' src='".base_url()."../assets/img/MirandesTrans.png' >";}
-ELSEIF($empresa === 'Otec'){$resumen.="<img style='width: 20%; ' src='".base_url()."../assets/img/logo impulsa.png' >";}
-ELSE{$resumen.="<img style='width: 20%; ' src='".base_url()."../assets/img/logo_vertical_cetep.png' >";}
+IF($empresa === 'MirAndes'){$resumen.="<img style='width: 20%;margin-left:25px ' src='".base_url()."../assets/img/MirandesTrans.png' >";}
+ELSEIF($empresa === 'Otec'){$resumen.="<img style='width: 20%;margin-left:25px ' src='".base_url()."../assets/img/logo impulsa.png' >";}
+ELSE{$resumen.="<img style='width: 20%;margin-left:25px ' src='".base_url()."../assets/img/logo_vertical_cetep.png' >";}
 $resumen.="
                 </td>
                 <td style='width:200px' align='left'>N° de Solicitud <span style='font-size:13px'><b>".$contratacion->conId."</b></span></td>
@@ -167,6 +171,16 @@ $resumen.=" <tr>
                 <td>".$contratacion->conObservacion."</td>
             </tr>
             <tr>
+                <td></td>
+                <td><b><span class='cabeceraVerde'>Describa situaciones críticas a las cuales se ve enfrentado el cargo de manera habitual</span></b></td>
+                <td>".$contratacion->conSituacion."</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><b><span class='cabeceraVerde'>Mencione unciones críticas del cargo</span></b></td>
+                <td>".$contratacion->conMencione."</td>
+            </tr>
+            <tr>
                 <td><br></td>
                 <td></td>
                 <td></td>
@@ -265,7 +279,7 @@ $resumen.= $estado." - ".$seg->segNombre."<br>";
                                      } 
 $resumen.= "<br><br></td><td></td></tr>";
 $resumen.= "</table></div></div></td></tr>";    
-$resumen.= "</table><div align='right' style='margin-right:40px'><br><br><br><br><br><br><br><br><br>Solicitud N°".$contratacion->conId." pág 2/2</div><br></div><br>";
+$resumen.= "</table><div align='right' style='margin-right:40px'><br><br><br><br>Solicitud N°".$contratacion->conId." pág 2/2</div><br></div><br>";
 echo $resumen;
 ?>
     
