@@ -348,6 +348,24 @@ box-shadow: -2px 2px 41px 2px rgba(0,0,0,0.75);z-index: 25; background-color: #e
                     <div class='col-lg-6'>
                         <textarea name="observacion" style=" width: 100%; height:60px" placeholder="Indique alguna observación extra, años de experiencia, software, carrera, industria, etc" ><?php IF(!empty($contratacion->conObservacion))echo $contratacion->conObservacion; ?></textarea>
                     </div>
+                    <div class="col-lg-12"></div>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-3">
+                        <label>Describa</label> 
+                    </div>
+                    <div class='col-lg-6'>
+                        <textarea name="situacion" style=" width: 100%; height:60px" placeholder="Describa situaciones críticas a las cuales se ve enfrentado el cargo de manera habitual" ><?php IF(!empty($contratacion->conSituacion))echo $contratacion->conSituacion; ?></textarea>
+                    </div>
+                    <div class="col-lg-12"></div>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-3">
+                        <label>Mencione</label> 
+                    </div>
+                    <div class='col-lg-6'>
+                        <textarea name="mencione" style=" width: 100%; height:60px" placeholder="Mencione funciones críticas del cargo" ><?php IF(!empty($contratacion->conMencione))echo $contratacion->conMencione; ?></textarea>
+                    </div>
+                    
+                    
                     <div id="titleJefatura" class="col-lg-3 title">Ingrese Jefe directo del cargo solicitado</div>
                     <div class="col-lg-12"><hr></div>
                     <div class="col-lg-1"></div>

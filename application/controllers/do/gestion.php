@@ -132,6 +132,8 @@ class gestion extends CI_Controller {
         $jornada   = $this->input->post('jornada');
         $modalidad   = $this->input->post('modalidad');
         $observacion   = $this->input->post('observacion');
+        $mencione   = $this->input->post('mencione');
+        $situacion   = $this->input->post('situacion');
         $matOtro   = $this->input->post('matOtro');
         $uniOtro   = $this->input->post('uniOtro');
         $horas   = $this->input->post('horas');
@@ -174,6 +176,8 @@ class gestion extends CI_Controller {
         $this->contratacion_model->conJornada= $jornada;
         $this->contratacion_model->conModalidad= $modalidad;
         $this->contratacion_model->conObservacion= $observacion;
+        $this->contratacion_model->conSituacion= $situacion;
+        $this->contratacion_model->conMencione= $mencione;
         $this->contratacion_model->conMatOtro= $matOtro;
         $this->contratacion_model->conUniOtro= $uniOtro;
         $this->contratacion_model->conEstado= $estado;
