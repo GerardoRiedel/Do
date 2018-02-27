@@ -241,7 +241,11 @@ class Login extends CI_Controller
                             $this->guardarLog();             
                             $this->index();
                 }ELSE{
-                    die('nuevo');
+                    echo '<script>alert("Usuario o clave invalida");</script>';
+                    //$this->session->sess_destroy();
+                    echo "<script>window.location.href='".base_url()."';</script>";
+                
+                    //die('nuevo');
                 }
                 
                                                                         
